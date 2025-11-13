@@ -1,10 +1,11 @@
 -- Tabela para armazenar informações dos usuários
 CREATE TABLE users (
-    id VARCHAR(255) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    role ENUM('admin', 'collaborator') NOT NULL,
-    avatar VARCHAR(255)
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,           -- Nome do funcionário
+    position VARCHAR(255) NOT NULL,       -- Cargo
+    department VARCHAR(255) NOT NULL,     -- Setor
+    assigned_epi VARCHAR(255),            -- EPIs atribuídos (pode armazenar nomes ou IDs)
+    training_date DATE                    -- Data do treinamento
 );
 
 -- Tabela para armazenar o registro dos Equipamentos de Proteção Individual (EPIs)

@@ -1,10 +1,10 @@
 import MySQLdb
 
-db = MySQLdb.connect(
-    host="localhost",
-    user="seu_usuario",        # Ex: 'root'
-    passwd="sua_senha",        # Senha do MySQL
-    db="controle_epi"          # Nome do banco de dados
-)
-
-cursos = db.cursor()
+def get_db_connection():
+    return MySQLdb.connect(
+        host="localhost",
+        user="root",
+        passwd="1234",
+        db="controle_epi",
+        charset="utf8mb4"
+    )

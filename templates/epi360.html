@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index-style.css') }}">
+    <title>EPI360 - Sistema de Controle de EPIs</title>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h1>EPI<span>360</span></h1>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item" data-page="epis">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    EPIs
+                    <span class="nav-badge">2</span>
+                </a>
+                <a href="#" class="nav-item" data-page="funcionarios">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    Funcionários
+                </a>
+                <a href="#" class="nav-item" data-page="relatorios">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Relatórios
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div>
+                    <svg class="bell-icon" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar">NU</div>
+                    <span>Nome Usuário</span>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="content">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page active">
+                    <div class="welcome-section">
+                        <h2>Bem-vindo ao EPI360</h2>
+                        <p>Utilize o sistema para gerenciar os seus equipamentos de proteção individual (EPIs)</p>
+                        <button class="btn-primary">Começar</button>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">N/A</div>
+                            <div class="stat-label">EPIs registrados</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">N/A</div>
+                            <div class="stat-label">Funcionários treinados</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">N/A</div>
+                            <div class="stat-label">Relatórios gerados</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <h3>Resumo</h3>
+                        <div class="chart-container">
+                            <div class="circular-chart">
+                                <svg width="192" height="192">
+                                    <circle class="circle-bg" cx="96" cy="96" r="80"></circle>
+                                    <circle class="circle-progress" cx="96" cy="96" r="80"></circle>
+                                </svg>
+                                <div class="chart-label">None</div>
+                            </div>
+                        </div>
+                        <div class="chart-description">EPIs em validade</div>
+                    </div>
+                </div>
+
+                <!-- EPIs Page -->
+                <div id="epis" class="page">
+                    <div class="page-header">
+                        <h2>Gerenciar EPIs</h2>
+                        <button class="btn-add" onclick="openModal()">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Adicionar EPI
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Código</th>
+                                    <th>Lote</th>
+                                    <th>Quantidade</th>
+                                    <th>Validade</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <!-- Epis -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Funcionários Page -->
+                <div id="funcionarios" class="page">
+                    <div class="page-header">
+                        <h2>Gerenciar Funcionários</h2>
+                        <button class="btn-add">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                            Adicionar Funcionário
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Cargo</th>
+                                    <th>Setor</th>
+                                    <th>EPIs Atribuídos</th>
+                                    <th>Treinamento</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <!-- Funcionários -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Relatórios Page -->
+                <div id="relatorios" class="page">
+                    <div class="page-header">
+                        <h2>Relatórios</h2>
+                        <button class="btn-add">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Gerar Relatório
+                        </button>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">N/A</div>
+                            <div class="stat-label">Relatórios gerados este mês</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">N/A</div>
+                            <div class="stat-label">EPIs vencendo em 30 dias</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">N/A</div>
+                            <div class="stat-label">Conformidade de treinamento</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal para Adicionar EPI -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Novo EPI</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label for="nome">Nome do EPI</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="codigo">Código</label>
+                    <input type="text" id="codigo" name="codigo" required>
+                </div>
+                <div class="form-group">
+                    <label for="lote">Lote</label>
+                    <input type="text" id="lote" name="lote" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantidade">Quantidade</label>
+                    <input type="number" id="quantidade" name="quantidade" required>
+                </div>
+                <div class="form-group">
+                    <label for="validade">Data de Validade</label>
+                    <input type="date" id="validade" name="validade" required>
+                </div>
+                <div class="form-group">
+                    <label for="fornecedor">Fornecedor</label>
+                    <input type="text" id="fornecedor" name="fornecedor">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Navegação entre páginas
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all nav items and pages
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                
+                // Add active class to clicked nav item
+                this.classList.add('active');
+                
+                // Show corresponding page
+                const pageId = this.getAttribute('data-page');
+                document.getElementById(pageId).classList.add('active');
+            });
+        });
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

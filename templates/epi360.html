@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='index-style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index-style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icons/favicon.svg') }}" type="image/svg+xml">
+    <link rel="icon" href="{{ url_for('static', filename='icons/favicon.png') }}" sizes="32x32" type="image/png">
     <title>EPI360 - Sistema de Controle de EPIs</title>
 </head>
 
@@ -65,8 +67,8 @@
                     </svg>
                 </div>
                 <div class="user-info">
-                    <div class="user-avatar">NU</div>
-                    <span>Nome Usuário</span>
+                    <div class="user-avatar">ADM</div>
+                    <span>Administração</span>
                 </div>
             </header>
 
@@ -77,7 +79,7 @@
                     <div class="welcome-section">
                         <h2>Bem-vindo ao EPI360</h2>
                         <p>Utilize o sistema para gerenciar os seus equipamentos de proteção individual (EPIs)</p>
-                        <button class="btn-primary">Começar</button>
+                        <button class="btn-primary" onclick="document.querySelector('[data-page=epis]').click()">Começar</button>
                     </div>
 
                     <div class="stats-grid">
@@ -86,27 +88,35 @@
                             <div class="stat-label">EPIs registrados</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-number">N/A</div>
+                            <div class="stat-number">{{ total_trained or 'N/A' }}</div>
                             <div class="stat-label">Funcionários treinados</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-number">N/A</div>
+                            <div class="stat-number">{{ reports_generated or 'N/A' }}</div>
                             <div class="stat-label">Relatórios gerados</div>
                         </div>
                     </div>
 
                     <div class="summary-card">
                         <h3>Resumo</h3>
-                        <div class="chart-container">
-                            <div class="circular-chart">
-                                <svg width="192" height="192">
-                                    <circle class="circle-bg" cx="96" cy="96" r="80"></circle>
-                                    <circle class="circle-progress" cx="96" cy="96" r="80"></circle>
-                                </svg>
-                                <div class="chart-label">None</div>
-                            </div>
+                        <div class="summary-list">
+                            <p><strong>EPIs vencendo em 30 dias:</strong> {{ epivencendo_count or 0 }}</p>
+                            <ul>
+                                {% for epi in soon_expiring %}
+                                    <li>{{ epi[0] }} — {{ epi[1] }}</li>
+                                {% else %}
+                                    <li>Nenhum EPI vencendo nos próximos 30 dias</li>
+                                {% endfor %}
+                            </ul>
+
+                            <p><strong>Conformidade de treinamento (último ano):</strong>
+                                {% if training_percentage is not none %}
+                                    {{ training_percentage }}%
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </p>
                         </div>
-                        <div class="chart-description">EPIs em validade</div>
                     </div>
                 </div>
 
@@ -133,11 +143,37 @@
                                     <th>Quantidade</th>
                                     <th>Validade</th>
                                     <th>Status</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                <!-- Epis -->
+                                {% for epi in epis %}
+                                    {% set data_validade = epi[5] %}
+                                    {% set hoje = now %}
+                                    {% set status_vencido = data_validade < hoje %}
+                                    <tr>
+                                        <td>{{ epi[1] }}</td>
+                                        <td>{{ epi[2] }}</td>
+                                        <td>{{ epi[3] }}</td>
+                                        <td>{{ epi[4] }}</td>
+                                        <td>{{ epi[5] }}</td>
+                                        <td>
+                                            {% if status_vencido %}
+                                                <span class="badge badge-danger">Vencido</span>
+                                            {% else %}
+                                                <span class="badge badge-success">Ativo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button class="btn-delete" data-epi-id="{{ epi[0] }}" data-epi-nome="{{ epi[1] }}">Deletar</button>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="7" style="text-align: center; color: #888;">Nenhum EPI registrado</td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -165,11 +201,33 @@
                                     <th>Setor</th>
                                     <th>EPIs Atribuídos</th>
                                     <th>Treinamento</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                <!-- Funcionários -->
+                                {% for func in funcionarios %}
+                                    <tr>
+                                        <td>{{ func[1] }}</td>
+                                        <td>{{ func[2] }}</td>
+                                        <td>{{ func[3] }}</td>
+                                        <td>{{ func[4] }}</td>
+                                        <td>
+                                            {% if func[5] %}
+                                                {{ func[5] }}
+                                            {% else %}
+                                                <span style="color: #888;">Não informado</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <button class="btn-delete" data-func-id="{{ func[0] }}" data-func-nome="{{ func[1] }}">Deletar</button>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; color: #888;">Nenhum funcionário registrado</td>
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -179,27 +237,29 @@
                 <div id="relatorios" class="page">
                     <div class="page-header">
                         <h2>Relatórios</h2>
-                        <button class="btn-add">
-                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                </path>
-                            </svg>
-                            Gerar Relatório
-                        </button>
+                        <form method="get" action="{{ url_for('gerar_relatorio') }}" style="display:inline-block; margin:0;">
+                            <button class="btn-add" type="submit">
+                                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
+                                </svg>
+                                Gerar Relatório
+                            </button>
+                        </form>
                     </div>
 
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-number">N/A</div>
+                            <div class="stat-number">{{ reports_generated or 'N/A' }}</div>
                             <div class="stat-label">Relatórios gerados este mês</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-number">N/A</div>
+                            <div class="stat-number">{{ epivencendo_count or 0 }}</div>
                             <div class="stat-label">EPIs vencendo em 30 dias</div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-number">N/A</div>
+                            <div class="stat-number">{% if training_percentage is not none %}{{ training_percentage }}%{% else %}N/A{% endif %}</div>
                             <div class="stat-label">Conformidade de treinamento</div>
                         </div>
                     </div>
@@ -215,7 +275,8 @@
                 <h3>Adicionar Novo EPI</h3>
                 <button class="close-modal" onclick="closeModal()">&times;</button>
             </div>
-            <form>
+
+            <form method="post">
                 <div class="form-group">
                     <label for="nome">Nome do EPI</label>
                     <input type="text" id="nome" name="nome" required>
@@ -238,7 +299,7 @@
                 </div>
                 <div class="form-group">
                     <label for="fornecedor">Fornecedor</label>
-                    <input type="text" id="fornecedor" name="fornecedor">
+                    <input type="text" id="fornecedor" name="fornecedor" required>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
@@ -294,7 +355,8 @@
                 <h3>Adicionar Novo Funcionário</h3>
                 <button class="close-modal" onclick="closeModalFuncionario()">&times;</button>
             </div>
-            <form id="form-funcionario">
+
+            <form id="form-funcionario" method="post">
                 <div class="form-group">
                     <label for="nome-func">Nome</label>
                     <input type="text" id="nome-func" name="nome" required>
@@ -309,7 +371,7 @@
                 </div>
                 <div class="form-group">
                     <label for="epis-func">EPIs Atribuídos</label>
-                    <input type="text" id="epis-func" name="epis">
+                    <input type="text" id="epis-func" name="epis" required>
                 </div>
                 <div class="form-group">
                     <label for="treinamento-func">Treinamento</label>
@@ -323,7 +385,28 @@
         </div>
     </div>
 
+    <!-- Modal de Delete com Senha -->
+    <div id="modal-delete" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirmar Deleção</h2>
+                <button type="button" class="close-btn" onclick="closeModalDelete()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="delete-message"></p>
+                <label for="delete-password">Senha de Administrador:</label>
+                <input type="password" id="delete-password" placeholder="Digite a senha de adm">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModalDelete()">Cancelar</button>
+                <button type="button" class="btn-danger" onclick="confirmarDelete()">Deletar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        let deleteData = { type: null, id: null };
+
         // Abrir modal de funcionário
         document.querySelector('.page-header .btn-add').addEventListener('click', function () {
             if (document.querySelector('#funcionarios.page.active')) {
@@ -331,6 +414,25 @@
             }
         });
 
+        // Event listeners para botões de deletar
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-delete')) {
+                const epiId = e.target.dataset.epiId;
+                const epicNome = e.target.dataset.epiNome;
+                const funcId = e.target.dataset.funcId;
+                const funcNome = e.target.dataset.funcNome;
+
+                if (epiId) {
+                    deleteData = { type: 'epi', id: epiId };
+                    document.getElementById('delete-message').innerText = `Tem certeza que deseja deletar o EPI "${epicNome}"?`;
+                } else if (funcId) {
+                    deleteData = { type: 'funcionario', id: funcId };
+                    document.getElementById('delete-message').innerText = `Tem certeza que deseja deletar o funcionário "${funcNome}"?`;
+                }
+                document.getElementById('modal-delete').classList.add('active');
+                document.getElementById('delete-password').value = '';
+            }
+        });
 
         // Modal de Funcionário
         function openModalFuncionario() {
@@ -342,9 +444,54 @@
             document.getElementById('modal-funcionario').classList.remove('active');
         }
 
+        // Fechar modal de delete
+        function closeModalDelete() {
+            document.getElementById('modal-delete').classList.remove('active');
+            document.getElementById('delete-password').value = '';
+            deleteData = { type: null, id: null };
+        }
+
+        // Confirmar delete
+        function confirmarDelete() {
+            const password = document.getElementById('delete-password').value;
+            const { type, id } = deleteData;
+
+            if (!password) {
+                alert('Por favor, digite a senha de administrador');
+                return;
+            }
+
+            const url = type === 'epi' ? `/deletar_epi/${id}` : `/deletar_funcionario/${id}`;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `senha=${encodeURIComponent(password)}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'sucesso') {
+                    alert(data.mensagem);
+                    location.reload();
+                } else {
+                    alert('Erro: ' + data.mensagem);
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao deletar');
+            });
+        }
+
         // Fechar clicando fora
         document.getElementById('modal-funcionario').addEventListener('click', function (e) {
             if (e.target === this) closeModalFuncionario();
+        });
+
+        document.getElementById('modal-delete').addEventListener('click', function (e) {
+            if (e.target === this) closeModalDelete();
         });
     </script>
 </body>

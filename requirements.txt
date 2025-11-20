@@ -1,3 +1,5 @@
 Flask
 openpyxl
 mysql-connector-python
+pymysql
+cryptography
